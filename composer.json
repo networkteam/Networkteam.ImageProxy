@@ -1,0 +1,19 @@
+{
+    "name": "networkteam/image-proxy",
+    "description": "Neos image and thumbnail serving via imgproxy, a fast and scalable microservice for image manipulation ",
+    "type": "neos-package",
+    "require": {
+        "neos/neos": "^4.0 || ^5.0 || ^7.0"
+    },
+    "authors": [
+        {
+            "name": "networkteam GmbH",
+            "email": "neos@networkteam.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Networkteam\\ImageProxy\\": "Classes"
+        }
+    }
+}
