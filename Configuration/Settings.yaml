@@ -1,8 +1,11 @@
 Networkteam:
   ImageProxy:
-    imgproxyUrl: 'http://localhost:8084'
-    key: '4e946be5550a7936baa6fd25460fe8a198c7d6db8a198c7e450b589122b9'
-    salt: '4306d79b2d2f891b9f951bf4fc657b4f76793a06e004d3134b8690b5515d'
+    # The imgproxy base URL
+    imgproxyUrl: 'http://localhost:8080'
+    # The hex encoded key for imgproxy signatures
+    key: ''
+    # The hex encoded salt for imgproxy signatures
+    salt: ''
 
     # Let imgproxy choose the file extension based on client preferences
     autoFormat: true

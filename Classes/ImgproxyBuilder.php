@@ -31,7 +31,7 @@ class ImgproxyBuilder
      */
     public function __construct(string $imgproxyUrl, string $key = null, string $salt = null)
     {
-        if ($key && $salt) {
+        if ((string)$key !== '' && (string)$salt !== '') {
             $this->key = pack("H*", $key);
             $this->salt = pack("H*", $salt);
         }

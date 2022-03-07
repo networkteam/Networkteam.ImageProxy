@@ -2,7 +2,6 @@
 
 namespace Networkteam\ImageProxy\Aspects;
 
-use Flownative\Aws\S3\S3Storage;
 use Neos\Flow\Aop\JoinPointInterface;
 use Neos\Flow\Mvc\ActionRequest;
 use Neos\Flow\ResourceManagement\ResourceManager;
@@ -57,7 +56,7 @@ class ThumbnailAspect
 
         $resourceCollection = $this->resourceManager->getCollection($asset->getResource()->getCollectionName());
         $resourceStorage = $resourceCollection->getStorage();
-        if ($resourceStorage instanceof S3Storage) {
+        if (get_class($resourceStorage) === 'Flownative\Aws\S3\S3Storage') {
             $bucketName = $resourceStorage->getBucketName();
             $keyPrefix = $resourceStorage->getKeyPrefix();
             $sourceUri = sprintf('s3://%s/%s/%s', $bucketName, rtrim($keyPrefix, '/'), $asset->getResource()->getSha1());
