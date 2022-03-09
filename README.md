@@ -4,10 +4,10 @@ Neos image and thumbnail serving via imgproxy, a fast and scalable microservice 
 
 ## Installation
 
-Install the package via Composer: 
+Install the package via Composer:
 
 ```sh
-    composer require networkteam/image-proxy
+composer require networkteam/image-proxy
 ```
 
 Add settings for your imgproxy instance:
@@ -25,7 +25,7 @@ Networkteam:
 EOF
 ```
 
-Leave key and salt empty if you didn't set a key and salt for imgproxy (don't do this in production). 
+Leave key and salt empty if you didn't set a key and salt for imgproxy (don't do this in production).
 
 Note: the URL should be a publicly reachable URL.
 

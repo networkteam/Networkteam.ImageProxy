@@ -2,8 +2,6 @@
 
 namespace Networkteam\ImageProxy;
 
-use JetBrains\PhpStorm\Pure;
-
 class ImgproxyBuilder
 {
 
