@@ -7,6 +7,7 @@ use Neos\Flow\Mvc\ActionRequest;
 use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Domain\Model\Image;
+use Neos\Media\Domain\Model\ImageVariant;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Neos\Flow\Annotations as Flow;
 use Networkteam\ImageProxy\ImgproxyBuilder;
@@ -37,7 +38,7 @@ class ThumbnailAspect
         $asset = $joinPoint->getMethodArgument('asset');
 
         // We only use imgproxy for images...
-        if (!($asset instanceof Image) || empty($this->settings['imgproxyUrl'])) {
+        if (!($asset instanceof Image) || !($asset instanceof ImageVariant) || empty($this->settings['imgproxyUrl'])) {
             return $joinPoint->getAdviceChain()->proceed($joinPoint);
         }
 
