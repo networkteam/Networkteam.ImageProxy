@@ -29,6 +29,8 @@ Leave key and salt empty if you didn't set a key and salt for imgproxy (don't do
 
 Note: the URL should be a publicly reachable URL.
 
+Note: When everything works for you, previously generated thumbnails can be removed with `./flow media:clearthumbnails`. They are not used anymore.
+
 ## Running imgproxy via Docker
 
 ### Serving images from S3
