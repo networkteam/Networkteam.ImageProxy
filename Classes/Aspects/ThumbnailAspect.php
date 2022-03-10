@@ -38,7 +38,7 @@ class ThumbnailAspect
         $asset = $joinPoint->getMethodArgument('asset');
 
         // We only use imgproxy for images...
-        if (!($asset instanceof Image) || !($asset instanceof ImageVariant) || empty($this->settings['imgproxyUrl'])) {
+        if (!($asset instanceof Image || $asset instanceof ImageVariant) || empty($this->settings['imgproxyUrl'])) {
             return $joinPoint->getAdviceChain()->proceed($joinPoint);
         }
 
