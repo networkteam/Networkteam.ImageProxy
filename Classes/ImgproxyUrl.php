@@ -47,6 +47,12 @@ class ImgproxyUrl
         return $this;
     }
 
+    public function fileName(string $path): self
+    {
+        $this->processingOptions[] = 'fn:' .  $path;
+        return $this;
+    }
+
     public function build(): string
     {
         return $this->builder->generateUrl($this->url, $this->processingOptions, $this->extension);

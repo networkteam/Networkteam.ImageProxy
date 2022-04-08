@@ -69,6 +69,7 @@ class ThumbnailAspect
         $targetWidth = $configuration->getWidth() ?? $configuration->getMaximumWidth() ?? 0;
 
         $url = $builder->buildUrl($sourceUri);
+        $url->fileName(pathinfo($asset->getResource()->getFilename(), PATHINFO_FILENAME));
 
         if ($configuration->getQuality() !== null) {
             $url->quality($configuration->getQuality());
