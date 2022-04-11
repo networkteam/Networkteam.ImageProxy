@@ -24,6 +24,12 @@ class ThumbnailAspect
     protected $settings;
 
     /**
+     * @Flow\InjectConfiguration(package="Neos.Media.image.defaultOptions.quality")
+     * @var integer
+     */
+    protected $defaultQuality;
+
+    /**
      * @Flow\Inject
      * @var ResourceManager
      */
@@ -70,8 +76,17 @@ class ThumbnailAspect
 
         $url = $builder->buildUrl($sourceUri);
 
+        // set the quality information if given
+        // otherwise use the format quality string if provided
         if ($configuration->getQuality() !== null) {
             $url->quality($configuration->getQuality());
+        } else {
+            if (!empty($this->settings['formatQuality'])) {
+                $url->formatQuality($this->settings['formatQuality']);
+            } else {
+                // if no settings are provided use neos.media image default quality
+                $url->quality($this->defaultQuality);
+            }
         }
 
         $resizingType = ImgproxyBuilder::RESIZE_TYPE_FIT;

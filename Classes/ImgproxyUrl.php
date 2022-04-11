@@ -56,4 +56,9 @@ class ImgproxyUrl
     {
         $this->processingOptions[] = 'q:' . $quality;
     }
+
+    public function formatQuality(string $qualityString)
+    {
+        $this->processingOptions[] = 'fq:' . $qualityString;
+    }
 }
