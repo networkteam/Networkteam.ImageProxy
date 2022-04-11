@@ -10,5 +10,5 @@ Networkteam:
     # Let imgproxy choose the file extension based on client preferences
     autoFormat: true
 
-    # Quality format string, eg: 'jpg=75,avif=80,webp=70'
+    # Format Quality, eg: 'jpg:75:avif:80:webp:70'
     formatQuality: ''
