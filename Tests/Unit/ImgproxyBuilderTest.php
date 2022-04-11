@@ -37,6 +37,20 @@ class ImgproxyBuilderTest extends \Neos\Flow\Tests\UnitTestCase
 
     /**
      * @test
+     */
+    public function generateLocalUrlWithFileName()
+    {
+        $builder = new ImgproxyBuilder("http://localhost:8084");
+        $url = $builder->buildUrl("local:///path/to/image.jpg")
+            ->extension('png')
+            ->fileName("test-image")
+            ->build();
+
+        $this->assertEquals('http://localhost:8084/insecure/fn:test-image/bG9jYWw6Ly8vcGF0aC90by9pbWFnZS5qcGc.png', $url);
+    }
+
+    /**
+     * @test
      * @dataProvider expectedSizeExamples
      */
     public function expectedSize(?int $actualWidth, ?int $actualHeight, int $targetWidth, int $targetHeight, string $resizingType, bool $enlarge, int $expectedWidth, int $expectedHeight)
