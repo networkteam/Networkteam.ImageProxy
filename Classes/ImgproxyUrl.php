@@ -49,7 +49,7 @@ class ImgproxyUrl
 
     public function fileName(string $path): self
     {
-        $this->processingOptions[] = 'fn:' .  $path;
+        $this->processingOptions[] = 'fn:' . urlencode($path);
         return $this;
     }
 
