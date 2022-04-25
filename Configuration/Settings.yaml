@@ -1,7 +1,7 @@
 Networkteam:
   ImageProxy:
     # The imgproxy base URL
-    imgproxyUrl: 'http://localhost:8080'
+    imgproxyUrl: ''
     # The hex encoded key for imgproxy signatures
     key: ''
     # The hex encoded salt for imgproxy signatures

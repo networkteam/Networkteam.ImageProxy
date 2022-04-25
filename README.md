@@ -36,7 +36,7 @@ Note: When everything works for you, previously generated thumbnails can be remo
 ### Serving images from S3
 
 ```shell
-docker run -p 8084:8080 -it \
+docker run -p 8080:8080 -it \
   -e IMGPROXY_USE_S3=true \
   -e IMGPROXY_S3_ENDPOINT=https://your-minio-or-s3-endpoint.tld \
   -e AWS_ACCESS_KEY_ID=your-access-key \
