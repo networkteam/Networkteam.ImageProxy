@@ -12,3 +12,20 @@ Networkteam:
 
     # Format Quality, eg: 'jpg:75:avif:80:webp:70'
     formatQuality: ''
+
+    # Media types that can be handled
+    mediaTypes:
+      'image/jpeg':
+        enabled: true
+      'image/png':
+        enabled: true
+      'image/gif':
+        enabled: true
+      'image/tiff':
+        enabled: true
+      'image/webp':
+        enabled: true
+      'image/avif':
+        enabled: true
+      'image/heic':
+        enabled: true

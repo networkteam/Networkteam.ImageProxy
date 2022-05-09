@@ -42,9 +42,13 @@ class ThumbnailAspect
     {
         /** @var Asset $asset */
         $asset = $joinPoint->getMethodArgument('asset');
+        $mediaType = $asset->getResource()->getMediaType();
 
         // We only use imgproxy for images...
-        if (!($asset instanceof Image || $asset instanceof ImageVariant) || empty($this->settings['imgproxyUrl'])) {
+        if (!($asset instanceof Image || $asset instanceof ImageVariant)
+            || empty($this->settings['imgproxyUrl'])
+            || ($this->settings['mediaTypes'][$mediaType]['enabled'] ?? false) === false
+        ) {
             return $joinPoint->getAdviceChain()->proceed($joinPoint);
         }
 
