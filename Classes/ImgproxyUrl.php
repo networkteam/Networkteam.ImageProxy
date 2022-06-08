@@ -67,4 +67,9 @@ class ImgproxyUrl
     {
         $this->processingOptions[] = 'fq:' . $qualityString;
     }
+
+    public function cacheBuster(string $cacheBuster)
+    {
+        $this->processingOptions[] = 'cb:' . $cacheBuster;
+    }
 }
