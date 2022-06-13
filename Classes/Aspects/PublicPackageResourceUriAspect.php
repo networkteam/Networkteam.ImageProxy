@@ -66,13 +66,16 @@ class PublicPackageResourceUriAspect
             $url->quality($this->defaultQuality);
         }
 
-        $sha1 = sha1_file(sprintf(
+        $stat = stat(sprintf(
             'resource://%s/Public/%s',
             $joinPoint->getMethodArgument('packageKey'),
             $joinPoint->getMethodArgument('relativePathAndFilename'),
         ));
-        $cacheBuster = substr($sha1, 0, 8);
-        $url->cacheBuster($cacheBuster);
+        if ($stat) {
+            $url->cacheBuster($stat['mtime']);
+        } else {
+            return $sourceUrl;
+        }
 
         return $url->build();
     }
