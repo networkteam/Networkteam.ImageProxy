@@ -29,3 +29,10 @@ Networkteam:
         enabled: true
       'image/heic':
         enabled: true
+
+    staticResources:
+      # Enable for static resources
+      enabled: false
+
+      # No need to enable for Favicons
+      ignoreRegexp: '/(favicon|apple-touch-icon)/'
