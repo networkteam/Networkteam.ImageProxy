@@ -7,6 +7,7 @@ use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Flow\Annotations as Flow;
 use Neos\Utility\MediaTypes;
 use Networkteam\ImageProxy\ImgproxyBuilder;
+use Psr\Log\LoggerInterface;
 
 /**
  * @Flow\Aspect
@@ -30,6 +31,11 @@ class PublicPackageResourceUriAspect
      * @var ResourceManager
      */
     protected $resourceManager;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
 
     /**
      * @Flow\Around("method(Neos\Flow\ResourceManagement\ResourceManager->getPublicPackageResourceUri())")
@@ -66,17 +72,28 @@ class PublicPackageResourceUriAspect
             $url->quality($this->defaultQuality);
         }
 
-        $stat = stat(sprintf(
+        $resource = sprintf(
             'resource://%s/Public/%s',
             $joinPoint->getMethodArgument('packageKey'),
             $joinPoint->getMethodArgument('relativePathAndFilename'),
-        ));
-        if ($stat) {
+        );
+        try {
+            $stat = stat($resource);
             $url->cacheBuster($stat['mtime']);
-        } else {
+        } catch (\Throwable) {
+            $this->logger->warning('Stat failed: ' . $resource);
             return $sourceUrl;
         }
 
         return $url->build();
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     * @return void
+     */
+    public function injectLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }
