@@ -49,6 +49,10 @@ class ImgproxyUrl
 
     public function fileName(string $path): self
     {
+        // Workaround for https://github.com/guzzle/psr7/issues/526
+        if (is_numeric($path)) {
+            $path = '_' . $path;
+        }
         $this->processingOptions[] = 'fn:' . urlencode($path);
         return $this;
     }

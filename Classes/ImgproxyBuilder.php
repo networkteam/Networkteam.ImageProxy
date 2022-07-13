@@ -50,8 +50,7 @@ class ImgproxyBuilder
      */
     public static function expectedSize(?int $actualWidth, ?int $actualHeight, int $targetWidth, int $targetHeight, string $resizingType, bool $enlarge): array
     {
-        $noActualSize = ($actualWidth === null || $actualHeight === null);
-
+        $noActualSize = ($actualWidth == null || $actualHeight == null);
         if ($noActualSize || $resizingType === ImgproxyBuilder::RESIZE_TYPE_FORCE || $resizingType === ImgproxyBuilder::RESIZE_TYPE_FILL) {
             return [
                 'width' => $targetWidth,
@@ -60,19 +59,28 @@ class ImgproxyBuilder
         }
 
         $actualAspectRatio = $actualWidth / $actualHeight;
-        $targetAspectRatio = $targetWidth / $targetHeight;
+        if ($targetWidth === 0 && $targetHeight === 0) {
+            return [
+                'width' => $actualWidth,
+                'height' => $actualHeight,
+            ];
+        } else if ($targetHeight === 0 || $targetWidth === 0) {
+            // Use the actual aspect ratio as the target aspect ratio if one of target width / height is not known
+            $targetAspectRatio = $actualAspectRatio;
+        } else {
+            $targetAspectRatio = $targetWidth / $targetHeight;
+        }
 
-        // The actual image is wider than the expected target image -> restrict by width
-        if ($actualAspectRatio > $targetAspectRatio) {
+        // The actual image is wider than the expected target image or target height is not known -> restrict by width
+        if ($targetHeight === 0 || $actualAspectRatio > $targetAspectRatio) {
             return [
                 'width' => $targetWidth,
-                'height' => $targetWidth/$actualAspectRatio,
+                'height' => $targetWidth / $actualAspectRatio,
             ];
-        }
-        // The actual image is narrower than the expected target image (or equal, but doesn't matter) -> restrict by height
+        } // The actual image is narrower than the expected target image (or equal, but doesn't matter) or target width is not known -> restrict by height
         else {
             return [
-                'width' => $actualAspectRatio*$targetHeight,
+                'width' => $actualAspectRatio * $targetHeight,
                 'height' => $targetHeight,
             ];
         }
