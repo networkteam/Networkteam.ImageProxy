@@ -67,12 +67,11 @@ class ImgproxyBuilder
             $targetAspectRatio = $targetDimension->getAspectRatio();
         }
 
-        if ($resizingType === ImgproxyBuilder::RESIZE_TYPE_FORCE || $resizingType === ImgproxyBuilder::RESIZE_TYPE_FILL) {
-            // do not change the dimension if the image should not be enlarged and the target width is higher than the actual width
-            if (!$enlarge && ($targetDimension->isGreater($actualDimension))) {
-                return $actualDimension;
-            }
+        if (!$enlarge && ($targetDimension->isGreater($actualDimension))) {
+            return $actualDimension;
+        }
 
+        if ($resizingType === ImgproxyBuilder::RESIZE_TYPE_FORCE || $resizingType === ImgproxyBuilder::RESIZE_TYPE_FILL) {
             return $targetDimension;
         }
 

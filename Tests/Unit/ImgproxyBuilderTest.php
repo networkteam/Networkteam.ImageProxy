@@ -137,6 +137,13 @@ class ImgproxyBuilderTest extends \PHPUnit\Framework\TestCase
                 new Dimension( 1000, 750),
             ],
             [
+                new Dimension( 400, 300),
+                new Dimension( 1000, 800),
+                ImgproxyBuilder::RESIZE_TYPE_FIT,
+                false,
+                new Dimension( 400, 300),
+            ],
+            [
                 new Dimension( 1000, 500),
                 new Dimension( 400, 300),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
@@ -149,6 +156,20 @@ class ImgproxyBuilderTest extends \PHPUnit\Framework\TestCase
                 ImgproxyBuilder::RESIZE_TYPE_FILL,
                 false,
                 new Dimension( 400, 300),
+            ],
+            [
+                new Dimension( 400, 300),
+                new Dimension( 1000, 800),
+                ImgproxyBuilder::RESIZE_TYPE_FILL,
+                false,
+                new Dimension( 400, 300),
+            ],
+            [
+                new Dimension( 400, 300),
+                new Dimension( 1000, 800),
+                ImgproxyBuilder::RESIZE_TYPE_FILL,
+                true,
+                new Dimension( 1000, 800),
             ],
             [
                 new Dimension( 1000, 500),
