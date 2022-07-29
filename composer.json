@@ -16,6 +16,11 @@
       "Networkteam\\ImageProxy\\": "Classes"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Networkteam\\ImageProxy\\Tests": "Tests"
+    }
+  },
   "license": "MIT",
   "require-dev": {
     "phpunit/phpunit": "^9.5",
