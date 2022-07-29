@@ -5,7 +5,7 @@ namespace Networkteam\ImageProxy\Tests\Unit;
 use GuzzleHttp\Psr7\Uri;
 use Networkteam\ImageProxy\ImgproxyBuilder;
 
-class ImgproxyBuilderTest extends \Neos\Flow\Tests\UnitTestCase
+class ImgproxyBuilderTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
