@@ -64,7 +64,7 @@ class ImgproxyBuilderTest extends \PHPUnit\Framework\TestCase
 
         $uri = new Uri($url);
 
-        $this->assertEquals('/_img/insecure/fn:_1/rs:fit:300:200:0:1/bG9jYWw6Ly8vcGF0aC90by8xLmpwZw', $url, "Generated Url can be pased");
+        $this->assertEquals('/_img/insecure/fn:_1/rs:fit:300:200:0:1/bG9jYWw6Ly8vcGF0aC90by8xLmpwZw', $url);
     }
 
     public function resizeExamples(): array
@@ -105,7 +105,7 @@ class ImgproxyBuilderTest extends \PHPUnit\Framework\TestCase
             ->extension('png')
             ->build();
 
-        $this->assertEquals($expectedUrl, $url, "Build with $resizingType");
+        $this->assertEquals($expectedUrl, $url);
     }
 
     /**
