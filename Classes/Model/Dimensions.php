@@ -2,7 +2,7 @@
 
 namespace Networkteam\ImageProxy\Model;
 
-class Dimension
+class Dimensions
 {
     protected int $width;
     protected int $height;
@@ -47,9 +47,16 @@ class Dimension
         return $this->height === 0;
     }
 
-    public function isGreater(Dimension $otherDimension) : bool
+    /**
+     * Check if both width and height are greater than or equal to the given dimensions,
+     * so the other dimensions fits into this.
+     *
+     * @param Dimensions $otherDimension
+     * @return bool
+     */
+    public function contains(Dimensions $otherDimension): bool
     {
-        return $this->height * $this->width > $otherDimension->getHeight() * $otherDimension->getWidth();
+        return $this->width >= $otherDimension->getWidth() && $this->height >= $otherDimension->getHeight();
     }
 
     function __toString()

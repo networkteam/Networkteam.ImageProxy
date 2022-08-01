@@ -4,7 +4,7 @@ namespace Networkteam\ImageProxy\Tests\Unit;
 
 use GuzzleHttp\Psr7\Uri;
 use Networkteam\ImageProxy\ImgproxyBuilder;
-use Networkteam\ImageProxy\Model\Dimension;
+use Networkteam\ImageProxy\Model\Dimensions;
 
 class ImgproxyBuilderTest extends \PHPUnit\Framework\TestCase
 {
@@ -112,7 +112,7 @@ class ImgproxyBuilderTest extends \PHPUnit\Framework\TestCase
      * @test
      * @dataProvider expectedSizeExamples
      */
-    public function expectedSize(Dimension $actualDimension, Dimension $targetDimension, string $resizingType, bool $enlarge, Dimension $expectedDimension)
+    public function expectedSize(Dimensions $actualDimension, Dimensions $targetDimension, string $resizingType, bool $enlarge, Dimensions $expectedDimension)
     {
         $actualExpectedDimension = ImgproxyBuilder::expectedSize($actualDimension, $targetDimension, $resizingType, $enlarge);
         $shouldEnlarge = $enlarge ? "true" : "false";
@@ -123,130 +123,172 @@ class ImgproxyBuilderTest extends \PHPUnit\Framework\TestCase
     {
         return [
             [
-                new Dimension(1000, 800),
-                new Dimension(400, 300),
+                new Dimensions(1000, 800),
+                new Dimensions(400, 300),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 false,
-                new Dimension(375, 300),
+                new Dimensions(375, 300),
             ],
             [
-                new Dimension(400, 300),
-                new Dimension(1000, 800),
+                new Dimensions(400, 300),
+                new Dimensions(1000, 800),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 true,
-                new Dimension(1000, 750),
+                new Dimensions(1000, 750),
             ],
             [
-                new Dimension(400, 300),
-                new Dimension(1000, 800),
+                new Dimensions(400, 300),
+                new Dimensions(1000, 800),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 false,
-                new Dimension(400, 300),
+                new Dimensions(400, 300),
             ],
             [
-                new Dimension(1000, 500),
-                new Dimension(400, 300),
+                new Dimensions(1000, 500),
+                new Dimensions(400, 300),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 false,
-                new Dimension(400, 200),
+                new Dimensions(400, 200),
             ],
             [
-                new Dimension(1000, 800),
-                new Dimension(400, 300),
+                new Dimensions(1000, 800),
+                new Dimensions(400, 300),
                 ImgproxyBuilder::RESIZE_TYPE_FILL,
                 false,
-                new Dimension(400, 300),
+                new Dimensions(400, 300),
             ],
             [
-                new Dimension(400, 300),
-                new Dimension(1000, 800),
+                new Dimensions(400, 300),
+                new Dimensions(1000, 800),
                 ImgproxyBuilder::RESIZE_TYPE_FILL,
                 false,
-                new Dimension(400, 300),
+                new Dimensions(400, 300),
             ],
             [
-                new Dimension(400, 300),
-                new Dimension(1000, 800),
+                new Dimensions(400, 300),
+                new Dimensions(1000, 800),
                 ImgproxyBuilder::RESIZE_TYPE_FILL,
                 true,
-                new Dimension(1000, 800),
+                new Dimensions(1000, 800),
             ],
             [
-                new Dimension(1000, 500),
-                new Dimension(400, 300),
+                new Dimensions(1000, 500),
+                new Dimensions(400, 300),
                 ImgproxyBuilder::RESIZE_TYPE_FILL,
                 false,
-                new Dimension(400, 300),
+                new Dimensions(400, 300),
             ],
             [
-                new Dimension(800, 600),
-                new Dimension(200, 300),
+                new Dimensions(800, 600),
+                new Dimensions(200, 300),
                 ImgproxyBuilder::RESIZE_TYPE_FORCE,
                 false,
-                new Dimension(200, 300),
+                new Dimensions(200, 300),
             ],
             [
-                new Dimension(800, 600),
-                new Dimension(0, 0),
+                new Dimensions(800, 600),
+                new Dimensions(0, 0),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 false,
-                new Dimension(800, 600),
+                new Dimensions(800, 600),
             ],
             [
-                new Dimension(800, 600),
-                new Dimension(400, 0),
+                new Dimensions(800, 600),
+                new Dimensions(400, 0),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 false,
-                new Dimension(400, 300),
+                new Dimensions(400, 300),
             ],
             [
-                new Dimension(800, 600),
-                new Dimension(0, 300),
+                new Dimensions(800, 600),
+                new Dimensions(0, 300),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 false,
-                new Dimension(400, 300),
+                new Dimensions(400, 300),
             ],
             [
-                new Dimension(0, 0),
-                new Dimension(400, 300),
+                new Dimensions(0, 0),
+                new Dimensions(400, 300),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 false,
-                new Dimension(400, 300),
+                new Dimensions(400, 300),
             ],
             [
-                new Dimension(400, 300),
-                new Dimension(800, 600),
+                new Dimensions(400, 300),
+                new Dimensions(800, 600),
                 ImgproxyBuilder::RESIZE_TYPE_FORCE,
                 false,
-                new Dimension(400, 300),
+                new Dimensions(400, 300),
             ],
             [
-                new Dimension(null, null),
-                new Dimension(400, 300),
+                new Dimensions(null, null),
+                new Dimensions(400, 300),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 false,
-                new Dimension(400, 300),
+                new Dimensions(400, 300),
             ],
             [
-                new Dimension(0, 0),
-                new Dimension(0, 0),
+                new Dimensions(0, 0),
+                new Dimensions(0, 0),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 false,
-                new Dimension(0, 0),
+                new Dimensions(0, 0),
             ],
             [
-                new Dimension(null, null),
-                new Dimension(0, 0),
+                new Dimensions(null, null),
+                new Dimensions(0, 0),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 false,
-                new Dimension(0, 0),
+                new Dimensions(0, 0),
             ],
             [
-                new Dimension(400, 300),
-                new Dimension(800, 600),
+                new Dimensions(400, 300),
+                new Dimensions(800, 600),
                 ImgproxyBuilder::RESIZE_TYPE_FIT,
                 true,
-                new Dimension(800, 600)
+                new Dimensions(800, 600)
+            ],
+            [
+                new Dimensions(400, 300),
+                new Dimensions(400, 600),
+                ImgproxyBuilder::RESIZE_TYPE_FIT,
+                true,
+                new Dimensions(400, 300)
+            ],
+            [
+                new Dimensions(400, 300),
+                new Dimensions(1000, 300),
+                ImgproxyBuilder::RESIZE_TYPE_FIT,
+                false,
+                new Dimensions(400, 300)
+            ],
+            [
+                new Dimensions(400, 300),
+                new Dimensions(400, 1000),
+                ImgproxyBuilder::RESIZE_TYPE_FIT,
+                false,
+                new Dimensions(400, 300)
+            ],
+            [
+                new Dimensions(400, 300),
+                new Dimensions(200, 1000),
+                ImgproxyBuilder::RESIZE_TYPE_FIT,
+                false,
+                new Dimensions(200, 150)
+            ],
+            [
+                new Dimensions(400, 300),
+                new Dimensions(1000, 1000),
+                ImgproxyBuilder::RESIZE_TYPE_FIT,
+                false,
+                new Dimensions(400, 300)
+            ],
+            [
+                new Dimensions(400, 300),
+                new Dimensions(400, 300),
+                ImgproxyBuilder::RESIZE_TYPE_FIT,
+                false,
+                new Dimensions(400, 300)
             ],
         ];
     }

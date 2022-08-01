@@ -11,7 +11,7 @@ use Neos\Media\Domain\Model\ImageVariant;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Neos\Flow\Annotations as Flow;
 use Networkteam\ImageProxy\ImgproxyBuilder;
-use Networkteam\ImageProxy\Model\Dimension;
+use Networkteam\ImageProxy\Model\Dimensions;
 
 /**
  * @Flow\Aspect
@@ -55,8 +55,6 @@ class ThumbnailAspect
 
         /** @var ThumbnailConfiguration $configuration */
         $configuration = $joinPoint->getMethodArgument('configuration');
-        /** @var ActionRequest $request */
-        $request = $joinPoint->getMethodName('request');
 
         $builder = new ImgproxyBuilder(
             $this->settings['imgproxyUrl'],
@@ -79,7 +77,7 @@ class ThumbnailAspect
         $targetHeight = $configuration->getHeight() ?? $configuration->getMaximumHeight() ?? 0;
         $targetWidth = $configuration->getWidth() ?? $configuration->getMaximumWidth() ?? 0;
 
-        $targetDimension = new Dimension($targetWidth, $targetHeight);
+        $targetDimension = new Dimensions($targetWidth, $targetHeight);
 
         $url = $builder->buildUrl($sourceUri);
         $url->fileName(pathinfo($asset->getResource()->getFilename(), PATHINFO_FILENAME));
@@ -117,7 +115,7 @@ class ThumbnailAspect
             $url->extension($configuration->getFormat());
         }
 
-        $actualDimension = new Dimension($asset->getWidth(), $asset->getHeight());
+        $actualDimension = new Dimensions($asset->getWidth(), $asset->getHeight());
 
         $expectedSize = ImgproxyBuilder::expectedSize($actualDimension, $targetDimension, $resizingType, $enlarge);
 
