@@ -2,6 +2,8 @@
 
 namespace Networkteam\ImageProxy;
 
+use Networkteam\ImageProxy\Model\Dimensions;
+
 class ImgproxyBuilder
 {
 
@@ -38,52 +40,47 @@ class ImgproxyBuilder
     }
 
     /**
-     * @param int|null $actualWidth
-     * @param int|null $actualHeight
-     * @param int $targetWidth
-     * @param int $targetHeight
+     * Calculate the expected size of the resulting image after it is processed by imgproxy
+     *
+     * @param Dimensions $actualDimension
+     * @param Dimensions $targetDimension
      * @param string $resizingType
      * @param bool $enlarge
-     * @return array{width: int, height: int}
+     * @return Dimensions
      * @internal
-     * Get the expected size of the resulting image
      */
-    public static function expectedSize(?int $actualWidth, ?int $actualHeight, int $targetWidth, int $targetHeight, string $resizingType, bool $enlarge): array
+    public static function expectedSize(Dimensions $actualDimension, Dimensions $targetDimension, string $resizingType, bool $enlarge): Dimensions
     {
-        $noActualSize = ($actualWidth == null || $actualHeight == null);
-        if ($noActualSize || $resizingType === ImgproxyBuilder::RESIZE_TYPE_FORCE || $resizingType === ImgproxyBuilder::RESIZE_TYPE_FILL) {
-            return [
-                'width' => $targetWidth,
-                'height' => $targetHeight,
-            ];
+        if ($actualDimension->noWidth() || $actualDimension->noHeight()) {
+            return $targetDimension;
         }
 
-        $actualAspectRatio = $actualWidth / $actualHeight;
-        if ($targetWidth === 0 && $targetHeight === 0) {
-            return [
-                'width' => $actualWidth,
-                'height' => $actualHeight,
-            ];
-        } else if ($targetHeight === 0 || $targetWidth === 0) {
-            // Use the actual aspect ratio as the target aspect ratio if one of target width / height is not known
-            $targetAspectRatio = $actualAspectRatio;
-        } else {
-            $targetAspectRatio = $targetWidth / $targetHeight;
+        if ($targetDimension->isZero()) {
+            return $actualDimension;
+        }
+
+        // Use the actual aspect ratio as the default target aspect ratio
+        $targetAspectRatio = $actualDimension->getAspectRatio();
+
+        if (!$targetDimension->noHeight() && !$targetDimension->noWidth()) {
+            $targetAspectRatio = $targetDimension->getAspectRatio();
+        }
+
+        if (!$enlarge && ($targetDimension->contains($actualDimension))) {
+            return $actualDimension;
+        }
+
+        if ($resizingType === ImgproxyBuilder::RESIZE_TYPE_FORCE || $resizingType === ImgproxyBuilder::RESIZE_TYPE_FILL) {
+            return $targetDimension;
         }
 
         // The actual image is wider than the expected target image or target height is not known -> restrict by width
-        if ($targetHeight === 0 || $actualAspectRatio > $targetAspectRatio) {
-            return [
-                'width' => $targetWidth,
-                'height' => $targetWidth / $actualAspectRatio,
-            ];
-        } // The actual image is narrower than the expected target image (or equal, but doesn't matter) or target width is not known -> restrict by height
-        else {
-            return [
-                'width' => $actualAspectRatio * $targetHeight,
-                'height' => $targetHeight,
-            ];
+        if ($targetDimension->getHeight() === 0 || $actualDimension->getAspectRatio() > $targetAspectRatio) {
+            return new Dimensions($targetDimension->getWidth(), $targetDimension->getWidth() / $actualDimension->getAspectRatio());
         }
+
+        // The actual image is narrower than the expected target image (or equal, but doesn't matter) or target width is not known -> restrict by height
+        return new Dimensions($actualDimension->getAspectRatio() * $targetDimension->getHeight(), $targetDimension->getHeight());
     }
 
     /**
