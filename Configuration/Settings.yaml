@@ -1,3 +1,8 @@
+Neos:
+  Fusion:
+    defaultContext:
+      Networkteam.ImageProxy: Networkteam\ImageProxy\Eel\SourceUriHelper
+
 Networkteam:
   ImageProxy:
     # The imgproxy base URL

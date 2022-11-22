@@ -62,17 +62,7 @@ class ThumbnailAspect
             $this->settings['salt']
         );
 
-        $sourceUri = '';
-
-        $resourceCollection = $this->resourceManager->getCollection($asset->getResource()->getCollectionName());
-        $resourceStorage = $resourceCollection->getStorage();
-        if (get_class($resourceStorage) === 'Flownative\Aws\S3\S3Storage') {
-            $bucketName = $resourceStorage->getBucketName();
-            $keyPrefix = $resourceStorage->getKeyPrefix();
-            $sourceUri = sprintf('s3://%s/%s/%s', $bucketName, rtrim($keyPrefix, '/'), $asset->getResource()->getSha1());
-        } else {
-            $sourceUri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
-        }
+        $sourceUri = $this->getSourceUri($asset);
 
         $targetHeight = $configuration->getHeight() ?? $configuration->getMaximumHeight() ?? 0;
         $targetWidth = $configuration->getWidth() ?? $configuration->getMaximumWidth() ?? 0;
@@ -139,5 +129,22 @@ class ThumbnailAspect
     protected function getRequest(JoinPointInterface $joinPoint): ActionRequest
     {
         return $joinPoint->getMethodArgument('request');
+    }
+
+    public function getSourceUri(Asset $asset): string
+    {
+        $sourceUri = '';
+
+        $resourceCollection = $this->resourceManager->getCollection($asset->getResource()->getCollectionName());
+        $resourceStorage = $resourceCollection->getStorage();
+        if (get_class($resourceStorage) === 'Flownative\Aws\S3\S3Storage') {
+            $bucketName = $resourceStorage->getBucketName();
+            $keyPrefix = $resourceStorage->getKeyPrefix();
+            $sourceUri = sprintf('s3://%s/%s/%s', $bucketName, rtrim($keyPrefix, '/'), $asset->getResource()->getSha1());
+        } else {
+            $sourceUri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
+        }
+
+        return $sourceUri;
     }
 }
