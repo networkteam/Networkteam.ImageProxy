@@ -2,14 +2,14 @@
 
 namespace Networkteam\ImageProxy\Aspects;
 
+use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Aop\JoinPointInterface;
 use Neos\Flow\Mvc\ActionRequest;
-use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Domain\Model\Image;
 use Neos\Media\Domain\Model\ImageVariant;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
-use Neos\Flow\Annotations as Flow;
+use Networkteam\ImageProxy\Eel\SourceUriHelper;
 use Networkteam\ImageProxy\ImgproxyBuilder;
 use Networkteam\ImageProxy\Model\Dimensions;
 
@@ -32,9 +32,9 @@ class ThumbnailAspect
 
     /**
      * @Flow\Inject
-     * @var ResourceManager
+     * @var SourceUriHelper
      */
-    protected $resourceManager;
+    protected $sourceUriHelper;
 
     /**
      * @Flow\Around("method(Neos\Media\Domain\Service\AssetService->getThumbnailUriAndSizeForAsset())")
@@ -62,17 +62,7 @@ class ThumbnailAspect
             $this->settings['salt']
         );
 
-        $sourceUri = '';
-
-        $resourceCollection = $this->resourceManager->getCollection($asset->getResource()->getCollectionName());
-        $resourceStorage = $resourceCollection->getStorage();
-        if (get_class($resourceStorage) === 'Flownative\Aws\S3\S3Storage') {
-            $bucketName = $resourceStorage->getBucketName();
-            $keyPrefix = $resourceStorage->getKeyPrefix();
-            $sourceUri = sprintf('s3://%s/%s/%s', $bucketName, rtrim($keyPrefix, '/'), $asset->getResource()->getSha1());
-        } else {
-            $sourceUri = $this->resourceManager->getPublicPersistentResourceUri($asset->getResource());
-        }
+        $sourceUri = $this->sourceUriHelper->sourceUri($asset->getResource());
 
         $targetHeight = $configuration->getHeight() ?? $configuration->getMaximumHeight() ?? 0;
         $targetWidth = $configuration->getWidth() ?? $configuration->getMaximumWidth() ?? 0;
@@ -140,4 +130,5 @@ class ThumbnailAspect
     {
         return $joinPoint->getMethodArgument('request');
     }
+
 }
