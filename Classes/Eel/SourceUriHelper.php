@@ -8,24 +8,41 @@ namespace Networkteam\ImageProxy\Eel;
 
 use Neos\Eel\ProtectedContextAwareInterface;
 use Neos\Flow\Annotations as Flow;
+use Neos\Flow\ResourceManagement\PersistentResource;
+use Neos\Flow\ResourceManagement\ResourceManager;
 use Neos\Media\Domain\Model\Asset;
 use Networkteam\ImageProxy\Aspects\ThumbnailAspect;
 
 class SourceUriHelper implements ProtectedContextAwareInterface
 {
-    /**
-     * @var ThumbnailAspect
-     * @Flow\Inject
-     */
-    protected $thumbnailAspect;
 
     /**
-     * @param $asset
-     * @return string The source uri of the asset
+     * @Flow\Inject
+     * @var ResourceManager
      */
-    public function sourceUri(Asset $asset)
+    protected $resourceManager;
+
+    /**
+     * Get the source URI for fetching a resource.
+     *
+     * @param PersistentResource $resource The resource to generate the URI for
+     * @return string The source URI of the resource (could be either a http or s3 URL depending on the resource storage)
+     */
+    public function sourceUri(PersistentResource $resource): string
     {
-        return $this->thumbnailAspect->getSourceUri($asset);
+        $sourceUri = '';
+
+        $resourceCollection = $this->resourceManager->getCollection($resource->getCollectionName());
+        $resourceStorage = $resourceCollection->getStorage();
+        if (get_class($resourceStorage) === 'Flownative\Aws\S3\S3Storage') {
+            $bucketName = $resourceStorage->getBucketName();
+            $keyPrefix = $resourceStorage->getKeyPrefix();
+            $sourceUri = sprintf('s3://%s/%s/%s', $bucketName, rtrim($keyPrefix, '/'), $resource->getSha1());
+        } else {
+            $sourceUri = $this->resourceManager->getPublicPersistentResourceUri($resource);
+        }
+
+        return $sourceUri;
     }
 
     /**
