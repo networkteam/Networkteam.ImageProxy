@@ -2,6 +2,7 @@ Neos:
   Fusion:
     defaultContext:
       Networkteam.ImageProxy: Networkteam\ImageProxy\Eel\SourceUriHelper
+      Networkteam.ImageProxyUrl: Networkteam\ImageProxy\Eel\UrlHelper
 
 Networkteam:
   ImageProxy:
