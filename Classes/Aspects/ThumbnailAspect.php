@@ -9,6 +9,7 @@ use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Domain\Model\Image;
 use Neos\Media\Domain\Model\ImageVariant;
 use Neos\Media\Domain\Model\ThumbnailConfiguration;
+use Neos\Utility\ObjectAccess;
 use Networkteam\ImageProxy\Eel\SourceUriHelper;
 use Networkteam\ImageProxy\ImgproxyBuilder;
 use Networkteam\ImageProxy\Model\Dimensions;
@@ -108,6 +109,14 @@ class ThumbnailAspect
         $actualDimension = new Dimensions($asset->getWidth(), $asset->getHeight());
 
         $expectedSize = ImgproxyBuilder::expectedSize($actualDimension, $targetDimension, $resizingType, $enlarge);
+
+        $focusPointX = ObjectAccess::getProperty($configuration, 'focusPointX', true);
+        $focusPointY = ObjectAccess::getProperty($configuration, 'focusPointY', true);
+        if($focusPointX && $focusPointY){
+            $focusPointX = ($focusPointX + 1) / 2;
+            $focusPointY = ($focusPointY + 1) / 2;
+            $url->focusPoint($focusPointX, $focusPointY);
+        }
 
         return [
             'width' => $expectedSize->getWidth(),
