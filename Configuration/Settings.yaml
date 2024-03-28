@@ -17,7 +17,6 @@ Networkteam:
     autoFormat: true
 
     # This allows to modify the imgproxy url before it gets returned
-    # All classes listed here must implement the ImgproxyUrlModifierInterface
     imgproxyUrlModifiers: []
 
     # Format Quality, eg: 'jpg:75:avif:80:webp:70'

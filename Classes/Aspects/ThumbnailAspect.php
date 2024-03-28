@@ -12,7 +12,6 @@ use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Networkteam\ImageProxy\Eel\SourceUriHelper;
 use Networkteam\ImageProxy\ImgproxyBuilder;
 use Networkteam\ImageProxy\Model\Dimensions;
-use Networkteam\ImageProxy\Model\ImgproxyUrlModifierInterface;
 
 /**
  * @Flow\Aspect
@@ -110,18 +109,12 @@ class ThumbnailAspect
 
         $expectedSize = ImgproxyBuilder::expectedSize($actualDimension, $targetDimension, $resizingType, $enlarge);
 
-        foreach ($this->settings['imgproxyUrlModifiers'] as $modifier){
-            if(!str_contains($modifier, '->')){
-                continue;
-            }
-
-            [$class, $method] = explode('->', $modifier);
-            if(class_exists($class) && method_exists($class, $method)){
-                $modifier = new $class();
-                if(!$modifier instanceof ImgproxyUrlModifierInterface){
-                    throw new \Exception("The class $class must implement the ImgproxyUrlModifierInterface interface.");
+        foreach ($this->settings['imgproxyUrlModifiers'] as $modifierClassName){
+            if(class_exists($modifierClassName)){
+                $modifier = new $modifierClassName();
+                if(is_callable($modifier)){
+                    $modifier($url, $configuration);
                 }
-                $modifier->modify($url, $configuration);
             }
         }
 
