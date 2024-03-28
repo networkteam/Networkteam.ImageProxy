@@ -77,8 +77,8 @@ class ImgproxyUrl
         $this->processingOptions[] = 'cb:' . $cacheBuster;
     }
 
-    public function focusPoint(float $focusPointX, float $focusPointY)
+    public function addProcessingOption($key, $value)
     {
-        $this->processingOptions[] = 'gravity:fp:' . $focusPointX . ':' . $focusPointY;
+        $this->processingOptions[] = $key . ':' . $value;
     }
 }
