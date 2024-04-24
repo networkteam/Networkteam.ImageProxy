@@ -5,6 +5,7 @@ namespace Networkteam\ImageProxy\Aspects;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Aop\JoinPointInterface;
 use Neos\Flow\Mvc\ActionRequest;
+use Neos\Flow\ObjectManagement\ObjectManager;
 use Neos\Media\Domain\Model\Asset;
 use Neos\Media\Domain\Model\Image;
 use Neos\Media\Domain\Model\ImageVariant;
@@ -12,6 +13,7 @@ use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Neos\Utility\ObjectAccess;
 use Networkteam\ImageProxy\Eel\SourceUriHelper;
 use Networkteam\ImageProxy\ImgproxyBuilder;
+use Networkteam\ImageProxy\ImgproxyBuilderInterface;
 use Networkteam\ImageProxy\Model\Dimensions;
 
 /**
@@ -38,6 +40,12 @@ class ThumbnailAspect
     protected $sourceUriHelper;
 
     /**
+     * @Flow\Inject
+     * @var ObjectManager
+     */
+    protected $objectManager;
+
+    /**
      * @Flow\Around("method(Neos\Media\Domain\Service\AssetService->getThumbnailUriAndSizeForAsset())")
      */
     public function generateImgproxyUri(JoinPointInterface $joinPoint): ?array
@@ -57,8 +65,10 @@ class ThumbnailAspect
         /** @var ThumbnailConfiguration $configuration */
         $configuration = $joinPoint->getMethodArgument('configuration');
 
-        $builder = new ImgproxyBuilder(
+        $builder = $this->objectManager->get(
+            ImgproxyBuilderInterface::class,
             $this->settings['imgproxyUrl'],
+            $configuration,
             $this->settings['key'],
             $this->settings['salt']
         );
@@ -112,7 +122,7 @@ class ThumbnailAspect
 
         $focusPointX = ObjectAccess::getProperty($configuration, 'focusPointX', true);
         $focusPointY = ObjectAccess::getProperty($configuration, 'focusPointY', true);
-        if(is_float($focusPointX) && is_float($focusPointX)){
+        if (is_float($focusPointX) && is_float($focusPointX)) {
             $focusPointX = ($focusPointX + 1) / 2;
             $focusPointY = ($focusPointY + 1) / 2;
             $url->focusPoint($focusPointX, $focusPointY);
@@ -121,7 +131,7 @@ class ThumbnailAspect
         return [
             'width' => $expectedSize->getWidth(),
             'height' => $expectedSize->getHeight(),
-            'src' => $url->build()
+            'src'    => $url->build(),
         ];
     }
 
