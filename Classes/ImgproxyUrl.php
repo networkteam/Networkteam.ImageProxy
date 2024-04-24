@@ -97,8 +97,8 @@ class ImgproxyUrl
         return $this->processingOptions;
     }
 
-    public function addProcessingOption(string $key, string $value)
+    public function addProcessingOption(string $option)
     {
-        $this->processingOptions[$key] = $value;
+        $this->processingOptions[] = $option;
     }
 }
