@@ -120,18 +120,10 @@ class ThumbnailAspect
 
         $expectedSize = ImgproxyBuilder::expectedSize($actualDimension, $targetDimension, $resizingType, $enlarge);
 
-        $focusPointX = ObjectAccess::getProperty($configuration, 'focusPointX', true);
-        $focusPointY = ObjectAccess::getProperty($configuration, 'focusPointY', true);
-        if (is_float($focusPointX) && is_float($focusPointX)) {
-            $focusPointX = ($focusPointX + 1) / 2;
-            $focusPointY = ($focusPointY + 1) / 2;
-            $url->focusPoint($focusPointX, $focusPointY);
-        }
-
         return [
             'width' => $expectedSize->getWidth(),
             'height' => $expectedSize->getHeight(),
-            'src'    => $url->build(),
+            'src' => $url->build(),
         ];
     }
 
