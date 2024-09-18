@@ -76,11 +76,11 @@ class ImgproxyBuilder
 
         // The actual image is wider than the expected target image or target height is not known -> restrict by width
         if ($targetDimension->getHeight() === 0 || $actualDimension->getAspectRatio() > $targetAspectRatio) {
-            return new Dimensions($targetDimension->getWidth(), $targetDimension->getWidth() / $actualDimension->getAspectRatio());
+            return new Dimensions($targetDimension->getWidth(), (int) ($targetDimension->getWidth() / $actualDimension->getAspectRatio()));
         }
 
         // The actual image is narrower than the expected target image (or equal, but doesn't matter) or target width is not known -> restrict by height
-        return new Dimensions($actualDimension->getAspectRatio() * $targetDimension->getHeight(), $targetDimension->getHeight());
+        return new Dimensions((int) ($actualDimension->getAspectRatio() * $targetDimension->getHeight()), $targetDimension->getHeight());
     }
 
     /**
