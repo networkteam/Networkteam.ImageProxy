@@ -76,4 +76,9 @@ class ImgproxyUrl
     {
         $this->processingOptions[] = 'cb:' . $cacheBuster;
     }
+
+    public function addProcessingOption($key, $value)
+    {
+        $this->processingOptions[] = $key . ':' . $value;
+    }
 }
