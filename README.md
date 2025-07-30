@@ -35,10 +35,10 @@ Note: When everything works for you, previously generated thumbnails can be remo
 
 See the following table for the correct plugin version to choose:
 
-| Neos CMS | Plugin version |
-|----------|----------------|
-| >= 9.0   | 2.x            |
-| >= 4.0   | 1.x            |
+| Neos CMS      | Plugin version |
+|---------------|----------------|
+| >= 9.0        | 2.x            |
+| >= 4.0, < 9.0 | 1.x            |
 
 
 ## Running imgproxy via Docker
