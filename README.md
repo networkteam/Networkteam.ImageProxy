@@ -65,3 +65,25 @@ docker run -p 8080:8080 -it \
 * Neos will **not generate any thumbnail**, they are generated ad-hoc from imgproxy as soon as a client requests it.
 
 Note: make sure to add a caching proxy / CDN on top of imgproxy, it has no built-in caching!
+
+## How to modify the imgproxy url
+If you need to modify the imgproxy url for your custom needs you can use the following hook:
+1. Create a modifier class in this format:
+```
+namespace Foo\Bar;
+
+class ModifierClass
+{
+    public function __invoke(ImgproxyUrl $url, ThumbnailConfiguration $configuration): void
+    {
+        // modify the ImgproxyUrl object
+    }
+}
+```
+2. Register your modifier in the settings:
+```
+Networkteam:
+  ImageProxy:
+    imgproxyUrlModifiers:
+      - Foo\Bar\ModifierClass
+```

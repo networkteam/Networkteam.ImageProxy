@@ -109,6 +109,15 @@ class ThumbnailAspect
 
         $expectedSize = ImgproxyBuilder::expectedSize($actualDimension, $targetDimension, $resizingType, $enlarge);
 
+        foreach ($this->settings['imgproxyUrlModifiers'] as $modifierClassName){
+            if(class_exists($modifierClassName)){
+                $modifier = new $modifierClassName();
+                if(is_callable($modifier)){
+                    $modifier($url, $configuration);
+                }
+            }
+        }
+
         return [
             'width' => $expectedSize->getWidth(),
             'height' => $expectedSize->getHeight(),
