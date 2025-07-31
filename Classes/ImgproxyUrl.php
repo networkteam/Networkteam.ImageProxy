@@ -59,7 +59,7 @@ class ImgproxyUrl
 
     public function build(): string
     {
-        return $this->builder->generateUrl($this->url, $this->processingOptions, $this->extension);
+        return $this->builder->generateUrl($this);
     }
 
     public function quality(int $quality)
@@ -75,5 +75,30 @@ class ImgproxyUrl
     public function cacheBuster(string $cacheBuster)
     {
         $this->processingOptions[] = 'cb:' . $cacheBuster;
+    }
+
+    public function focusPoint(float $focusPointX, float $focusPointY)
+    {
+        $this->processingOptions[] = 'gravity:fp:' . $focusPointX . ':' . $focusPointY;
+    }
+
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    public function getExtension(): ?string
+    {
+        return $this->extension;
+    }
+
+    public function getProcessingOptions(): array
+    {
+        return $this->processingOptions;
+    }
+
+    public function addProcessingOption(string $option)
+    {
+        $this->processingOptions[] = $option;
     }
 }

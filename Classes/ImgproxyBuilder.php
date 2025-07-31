@@ -2,9 +2,10 @@
 
 namespace Networkteam\ImageProxy;
 
+use Neos\Media\Domain\Model\ThumbnailConfiguration;
 use Networkteam\ImageProxy\Model\Dimensions;
 
-class ImgproxyBuilder
+class ImgproxyBuilder implements ImgproxyBuilderInterface
 {
 
     /**
@@ -20,23 +21,30 @@ class ImgproxyBuilder
      */
     public const RESIZE_TYPE_FORCE = 'force';
 
-    private string $imgproxyUrl;
-    private ?string $key = null;
-    private ?string $salt = null;
+    protected string $imgproxyUrl;
+    protected ThumbnailConfiguration $thumbnailConfiguration;
+    protected ?string $key = null;
+    protected ?string $salt = null;
 
     /**
      * @param string $imgproxyUrl The URL where imgproxy is publicly available
+     * @param ThumbnailConfiguration $thumbnailConfiguration
      * @param string|null $key
      * @param string|null $salt
      */
-    public function __construct(string $imgproxyUrl, string $key = null, string $salt = null)
-    {
+    public function __construct(
+        string $imgproxyUrl,
+        ThumbnailConfiguration $thumbnailConfiguration,
+        string $key = null,
+        string $salt = null
+    ) {
         if ((string)$key !== '' && (string)$salt !== '') {
             $this->key = pack("H*", $key);
             $this->salt = pack("H*", $salt);
         }
 
         $this->imgproxyUrl = $imgproxyUrl;
+        $this->thumbnailConfiguration = $thumbnailConfiguration;
     }
 
     /**
@@ -98,20 +106,18 @@ class ImgproxyBuilder
     }
 
     /**
-     * @param string $sourceUrl
-     * @param string[] $processingOptions
-     * @param string|null $extension
+     * @param ImgproxyUrl $imgproxyUrl
      * @return string
      * @internal
      * Generate an imgproxy URL with processing options and signature (if key and salt are set).
      *
      */
-    public function generateUrl(string $sourceUrl, array $processingOptions, ?string $extension): string
+    public function generateUrl(ImgproxyUrl $imgproxyUrl): string
     {
-        $encodedSourceUrl = self::base64UrlEncode($sourceUrl);
-        $pathAfterSignature = '/' . join('/', $processingOptions) . '/' . $encodedSourceUrl;
-        if ($extension !== null) {
-            $pathAfterSignature .= '.' . $extension;
+        $encodedSourceUrl = self::base64UrlEncode($imgproxyUrl->getUrl());
+        $pathAfterSignature = '/' . implode('/', $imgproxyUrl->getProcessingOptions()) . '/' . $encodedSourceUrl;
+        if ($imgproxyUrl->getExtension() !== null) {
+            $pathAfterSignature .= '.' . $imgproxyUrl->getExtension();
         }
 
         if ($this->key !== null) {
@@ -124,7 +130,7 @@ class ImgproxyBuilder
         }
     }
 
-    private static function base64UrlEncode(string $data): string
+    protected static function base64UrlEncode(string $data): string
     {
         return rtrim(strtr(base64_encode($data), '+/', '-_'), '=');
     }
