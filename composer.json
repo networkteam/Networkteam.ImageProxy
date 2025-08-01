@@ -24,8 +24,7 @@
   "license": "MIT",
   "require-dev": {
     "phpunit/phpunit": "^9.5",
-    "phpstan/phpstan": "^1.8",
-    "neos/contentgraph-doctrinedbaladapter": "*"
+    "phpstan/phpstan": "^1.8"
   },
   "scripts": {
     "test": "./vendor/bin/phpunit Tests"
